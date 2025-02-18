@@ -44,6 +44,7 @@ echo "$folderos" | while read -r folder; do
         outputo=$(ffmpeg -i "$audio_phile" -acodec pcm_s16le -ar 16000 -ac 1 "$output_file" 2>&1)
 
         if [ $? -ne 0 ]; then
+			rm -f "$output_file"
             echo "Error processing: $audio_phile" >> eror.txt
             echo "FFmpeg command: ffmpeg -i \"$audio_phile\" -acodec pcm_s16le -ar 16000 -ac 1 \"$output_file\"" >> eror.txt
             echo "Error message:" >> eror.txt
