@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Unzipping the audios
+
+if [ -z "$1" ]; then
+  echo "Bruhh, do it: $0 <zipfile>"
+  exit 1
+fi
+
+zipfilo="$1"
+
+parento="DeepFake"
+mkdir -p "$parento"
+
+echo "Unzippng $zipfilo into $parento..."
+unzip "$zipfilo" -d "$parento"
+
+find "$parento" -type f -name "*.zip" | while read -r zipfile; do
+  nestedXip=$(basename "$zipfile" .zip)
+  childo="$parento/$nestedXip"
+  
+  mkdir -p "$childo"
+  
+  echo "Unzipping $zipfile into $childo..."
+  unzip -o "$zipfile" -d "$childo"
+  
+done
+
+echo "Unzipping process completed! Congo!"
