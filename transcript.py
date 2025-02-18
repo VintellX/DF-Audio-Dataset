@@ -5,10 +5,10 @@ import json
 def fetchTranscript(dir_path):
     recognizer = sr.Recognizer()
     transcriptions = {}
-    for filename in os.listdir(directory_path):
+    for filename in os.listdir(dir_path):
         if filename.endswith(".wav"):
             filenum = int(filename.split('_')[-1].split('.')[0].replace('input', ''))
-            audioPhile = os.path.join(directory_path, filename)
+            audioPhile = os.path.join(dir_path, filename)
             with sr.AudioFile(audioPhile) as source:
                 audio_data = recognizer.record(source)
                 try:
