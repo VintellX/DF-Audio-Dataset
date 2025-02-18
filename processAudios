@@ -2,8 +2,17 @@
 
 # Convert all .wav files/audios to an uncompressed PCM format
 # -> PCM encoding 16-bit little-endian with sample rate of 16 kHz and in 1 channel
+# -> If you want to just process audios in a specific directory, then pass it as an argument
 
-ROOT_DIR="."
+if [ -n "$1" ]; then
+    SRC_DIR="$1"
+    if [ ! -d "$SRC_DIR" ]; then
+        echo "Wtf dude? $SRC_DIR is not even a valid directory!"
+        exit 1
+    fi
+else
+    SRC_DIR="."
+fi
 
 newFolder="ProcessedAudios"
 mkdir -p "$newFolder"
@@ -11,26 +20,32 @@ echo "Processing Audios xD"
 
 > eror.txt # Error (typo) in file name xD
 
-find "$ROOT_DIR" -mindepth 1 -maxdepth 1 -type d | while read -r folder; do
-    prevDir=$(basename "$folder") 
-    
+if [ -n "$1" ]; then
+    folderos="$SRC_DIR"
+else
+    folderos=$(find "$SRC_DIR" -mindepth 1 -maxdepth 1 -type d ! -name "$newFolder")
+fi
+
+echo "$folderos" | while read -r folder; do
+    prevDir=$(basename "$folder")
+
     mkdir -p "$newFolder/$prevDir"
 
     find "$folder" -type f -name "*.wav" | while read -r audio_phile; do
-        relative_path="${audio_phile#$ROOT_DIR/}"
-        
+        relative_path="${audio_phile#$SRC_DIR/}"
+
         dir_path=$(dirname "$relative_path")
-        
+
         output_dir="$newFolder/$dir_path"
         mkdir -p "$output_dir"
 
         output_file="$output_dir/$(basename "$audio_phile")"
 
-		outputo=$(ffmpeg -i "$audio_phile" -acodec pcm_s16le -ar 16000 -ac 1 "$output_file" 2>&1)
+        outputo=$(ffmpeg -i "$audio_phile" -acodec pcm_s16le -ar 16000 -ac 1 "$output_file" 2>&1)
 
         if [ $? -ne 0 ]; then
             echo "Error processing: $audio_phile" >> eror.txt
-            echo "FFmpeg command: $cmdXD" >> eror.txt
+            echo "FFmpeg command: ffmpeg -i \"$audio_phile\" -acodec pcm_s16le -ar 16000 -ac 1 \"$output_file\"" >> eror.txt
             echo "Error message:" >> eror.txt
             echo "$outputo" >> eror.txt
             echo "----------------------------------------" >> eror.txt
