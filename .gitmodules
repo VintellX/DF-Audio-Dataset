@@ -1,0 +1,6 @@
+[submodule "hardwareDiagram"]
+	path = hardwareDiagram
+	url = https://github.com/bhqv/DF-dataset-hardware-diagram
+[submodule "audioRecorder"]
+	path = audioRecorder
+	url = https://github.com/shivamkapoor172002/ClipSync_deep_fake_audio
