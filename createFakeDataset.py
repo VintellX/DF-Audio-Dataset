@@ -14,12 +14,12 @@ for folderName in os.listdir(parento):
         speakero=folderName.split('_')[0]
         speakeros.append(speakero)
 
-ckpt_converter = 'checkpoints_v2/converter'
+ckpt_converter = 'OpenVoice/checkpoints_v2/converter'
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 tone_color_converter = ToneColorConverter(f'{ckpt_converter}/config.json', device=device)
 tone_color_converter.load_ckpt(f'{ckpt_converter}/checkpoint.pth')
 
-source_se = torch.load(f'checkpoints_v2/base_speakers/ses/en-india.pth', map_location=device)   # using en-india as the speakers are from India
+source_se = torch.load(f'OpenVoice/checkpoints_v2/base_speakers/ses/en-india.pth', map_location=device)   # using en-india as the speakers are from India
 speaker_id=2    # speaker_id 2 is for the same reason
 speed = 1.0
 log_file_path = "logs.txt" # file to save logs

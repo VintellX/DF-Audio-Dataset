@@ -4,3 +4,6 @@
 [submodule "audioRecorder"]
 	path = audioRecorder
 	url = https://github.com/shivamkapoor172002/ClipSync_deep_fake_audio
+[submodule "OpenVoice"]
+	path = OpenVoice
+	url = https://github.com/myshell-ai/OpenVoice.git
