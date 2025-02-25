@@ -100,7 +100,6 @@ melotts @ git+https://github.com/myshell-ai/MeloTTS.git@209145371cff8fc3bd60d7be
 more-itertools==10.6.0
 mpmath==1.3.0
 # Editable install with no version control (MyShell-OpenVoice==0.0.0)
--e /home/VintellX/trashp/OpenVoice
 narwhals==1.26.0
 nest-asyncio==1.6.0
 networkx==2.8.8
