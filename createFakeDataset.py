@@ -1,12 +1,15 @@
 import os
 import torch
+import sys
+sys.path.insert(0, os.path.join(os.getcwd(), "OpenVoice"))
+
 from openvoice import se_extractor
 from openvoice.api import ToneColorConverter
 from transcript import *
 from melo.api import TTS
 import traceback
 
-parento = "./RealAudios"
+parento = os.path.join(os.getcwd(), "DeepFake","RealAudios")
 speakeros = []
 for folderName in os.listdir(parento):
     folderPath = os.path.join(parento, folderName)
@@ -14,12 +17,20 @@ for folderName in os.listdir(parento):
         speakero=folderName.split('_')[0]
         speakeros.append(speakero)
 
-ckpt_converter = 'OpenVoice/checkpoints_v2/converter'
+ckpt_converter = os.path.join('OpenVoice','checkpoints_v2','converter')
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-tone_color_converter = ToneColorConverter(f'{ckpt_converter}/config.json', device=device)
-tone_color_converter.load_ckpt(f'{ckpt_converter}/checkpoint.pth')
+if device.startswith("cuda"):
+    try:
+        gpu_name = torch.cuda.get_device_name(0)
+    except Exception:
+        gpu_name = "<unknown CUDA device>"
+    print(f"[INFO] Running on GPU ({gpu_name})")
+else:
+    print("[WARNING] CUDA not available — you are running on CPU, which will be much slower!")
+tone_color_converter = ToneColorConverter(os.path.join(f'{ckpt_converter}','config.json'), device=device)
+tone_color_converter.load_ckpt(os.path.join(f'{ckpt_converter}','checkpoint.pth'))
 
-source_se = torch.load(f'OpenVoice/checkpoints_v2/base_speakers/ses/en-india.pth', map_location=device)   # using en-india as the speakers are from India
+source_se = torch.load(os.path.join('OpenVoice','checkpoints_v2','base_speakers','ses','en-india.pth'), map_location=device)   # using en-india as the speakers are from India
 speaker_id=2    # speaker_id 2 is for the same reason
 speed = 1.0
 log_file_path = "logs.txt" # file to save logs
@@ -31,8 +42,8 @@ def trainOnAudioPhile(input_dir, speaker, filenum):
     return target_se, audio_name
 
 for speaker in speakeros:
-    input_dir = f"RealAudios/{speaker}_recordings"      # path of real audios
-    output_dir = f"FakeAudios/{speaker}_recordings"     # path of deepfake audios
+    input_dir = os.path.join("DeepFake", "RealAudios", f"{speaker}_recordings")      # path of real audios
+    output_dir = os.path.join("DeepFake", "FakeAudios", f"{speaker}_recordings")     # path of deepfake audios
     os.makedirs(output_dir, exist_ok=True)
     print(f"Fetching transcripts for {speaker}")
     transcript, rmfiles = fetchTranscript(input_dir)
